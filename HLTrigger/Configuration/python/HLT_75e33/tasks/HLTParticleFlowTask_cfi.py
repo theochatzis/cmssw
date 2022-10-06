@@ -11,7 +11,6 @@ from ..tasks.hgcalLocalRecoTask_cfi import *
 from ..tasks.highlevelrecoTask_cfi import *
 from ..tasks.highPtTripletStepTask_cfi import *
 from ..tasks.initialStepTask_cfi import *
-from ..tasks.iterTICLTask_cfi import *
 from ..tasks.itLocalRecoTask_cfi import *
 from ..tasks.localrecoTask_cfi import *
 from ..tasks.otLocalRecoTask_cfi import *
@@ -19,6 +18,9 @@ from ..tasks.particleFlowClusterTask_cfi import *
 from ..tasks.pixelTracksTask_cfi import *
 from ..tasks.RawToDigiTask_cfi import *
 from ..tasks.vertexRecoTask_cfi import *
+from ..tasks.mtdRecoTask_cfi import * 
+from ..tasks.iterTICLTask_cfi import *
+from ..tasks.vertex4DrecoTask_cfi import *
 
 HLTParticleFlowTask = cms.Task(
     RawToDigiTask,
@@ -31,7 +33,6 @@ HLTParticleFlowTask = cms.Task(
     highlevelrecoTask,
     initialStepTask,
     itLocalRecoTask,
-    iterTICLTask,
     localrecoTask,
     offlineBeamSpot,
     otLocalRecoTask,
@@ -39,5 +40,8 @@ HLTParticleFlowTask = cms.Task(
     pixelTracksTask,
     pixelVertices,
     trackerClusterCheck,
-    vertexRecoTask
+    vertexRecoTask,
+    mtdRecoTask,
+    iterTICLTask,
+    vertex4DrecoTask
 )
