@@ -26,10 +26,10 @@ pfTICL = cms.EDProducer("PFTICLProducer",
         trackQuality = cms.string('highPurity')
     ),
     ticlCandidateSrc = cms.InputTag("ticlTrackstersMerge"),
-    timingQualityThreshold = cms.double(0.5),
-    trackTimeErrorMap = cms.InputTag("tofPID","sigmat0"),
-    trackTimeQualityMap = cms.InputTag("mtdTrackQualityMVA","mtdQualMVA"),
-    trackTimeValueMap = cms.InputTag("tofPID","t0"),
-    useMTDTiming = cms.bool(False),                    
-    useTimingAverage = cms.bool(False)
+    trackTimeErrorMap = cms.InputTag("generalTracksTOFPIDProducer","sigmat0"),
+    trackTimeValueMap = cms.InputTag("generalTracksTOFPIDProducer","t0"),
+    trackTimeQualityMap = cms.InputTag("generalTracksMtdTrackQualityMVA","mtdQualMVA"),
+    timingQualityThreshold = cms.double(0.5), # MVA quality threshold
+    useMTDTiming = cms.bool(True), # uses MTD timing  
+    useTimingAverage = cms.bool(False) # combined time from both MTD and HGCAL if they both valid time (time error > 0)
 )

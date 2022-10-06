@@ -60,6 +60,16 @@ particleFlowBlock = cms.EDProducer("PFBlockProducer",
         cms.PSet(
             importerName = cms.string('GenericClusterImporter'),
             source = cms.InputTag("particleFlowClusterPS")
+        ),
+        cms.PSet( ## adding TrackTimingImporter
+            importerName = cms.string('TrackTimingImporter'),
+            timeErrorMap = cms.InputTag("generalTracksTOFPIDProducer","sigmat0"),
+            timeErrorMapGsf = cms.InputTag("generalTracksTOFPIDProducer","sigmat0"),
+            timeValueMap = cms.InputTag("generalTracksTOFPIDProducer","t0"),
+            timeValueMapGsf = cms.InputTag("generalTracksTOFPIDProducer","t0"),
+            timeQualityMap = cms.InputTag("generalTracksMtdTrackQualityMVA","mtdQualMVA"),
+            timeQualityMapGsf = cms.InputTag("generalTracksMtdTrackQualityMVA","mtdQualMVA"),
+            timeQualityThreshold = cms.double(0.5) # MVA quality threshold
         )
     ),
     linkDefinitions = cms.VPSet(
