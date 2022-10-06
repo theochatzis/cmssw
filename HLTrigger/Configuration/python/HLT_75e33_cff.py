@@ -91,8 +91,16 @@ fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/hltESPKFTrajectorySm
 fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/trackdnn_source_cfi")
 
 fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/Chi2MeasurementEstimatorForInOut_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/alongMomElePropagator_cfi")
 fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/KFTrajectoryFitterForInOut_cfi")
 fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/Chi2EstimatorForRefit_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/RungeKuttaTrackerPropagatorOpposite_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/SmartPropagatorAnyRKOpposite_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/KFSmootherForRefitOutsideIn_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/MTDCPEESProducer_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/MTDTimeCalibESProducer_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/MTDTransientTrackingRecHitBuilder_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/PropagatorWithMaterialForMTD_cfi")
 
 fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_AK4PFPuppiJet520_cfi")
 fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_L1Seeded_cfi")
