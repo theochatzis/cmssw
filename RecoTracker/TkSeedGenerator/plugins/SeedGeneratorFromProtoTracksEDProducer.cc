@@ -104,14 +104,14 @@ void SeedGeneratorFromProtoTracksEDProducer::produce(edm::Event& ev, const edm::
     bool keepTrack = false;
     if ((!foundVertices) || vertices->empty()) {
       if (useEventsWithNoVertex)
-        keepTrack = true and !produceComplement_;
+        keepTrack = true;
     } else if (usePV_) {
       GlobalPoint aPV(
           vertices->begin()->position().x(), vertices->begin()->position().y(), vertices->begin()->position().z());
       double distR2 = sqr(vtx.x() - aPV.x()) + sqr(vtx.y() - aPV.y());
       double distZ = fabs(vtx.z() - aPV.z());
       if (distR2 < sqr(originRadius) && distZ < originHalfLength) {
-        keepTrack = true and !produceComplement_;
+        keepTrack = true;
       }
     } else {
       for (reco::VertexCollection::const_iterator iv = vertices->begin(); iv != vertices->end(); ++iv) {
@@ -119,12 +119,12 @@ void SeedGeneratorFromProtoTracksEDProducer::produce(edm::Event& ev, const edm::
         double distR2 = sqr(vtx.x() - aPV.x()) + sqr(vtx.y() - aPV.y());
         double distZ = fabs(vtx.z() - aPV.z());
         if (distR2 < sqr(originRadius) && distZ < originHalfLength) {
-          keepTrack = true and !produceComplement_;
+          keepTrack = true;
           break;
         }
       }
     }
-    if(produceComplement_)
+    if(produceComplement_ and !keepTrack)
       (*leftTracks).push_back(proto);
     if (!keepTrack)
       continue;
