@@ -9,6 +9,7 @@ def customizeHLTForMixedPF(process):
 
     # Customization for the iter0 seeds
     process.hltIter0PFLowPixelSeedsFromPixelTracks.produceComplement = cms.bool(True)
+    process.hltIter0PFLowPixelSeedsFromPixelTracks.maxComplementTracks = cms.int32(500)
     
     # Apply cuts for pixel tracks complement
     process.hltPixelTracksLowPT = cms.EDProducer( "TrackWithVertexSelector",
@@ -77,5 +78,8 @@ def customizeHLTForMixedPF(process):
 
     # Customize the full hlt vertices such that they do not use the complement tracks by requiring at least 1 valid strip hit
     process.hltVerticesPF.TkFilterParameters.minValidStripHits = cms.int32(1)
-
+    
+    # Add the PFTracks in HLTTrackingForBeamspot
+    process.HLTTrackingForBeamSpot = cms.Sequence(process.HLTPreAK4PFJetsRecoSequence+process.HLTL2muonrecoSequence+process.HLTL3muonrecoSequence+process.HLTDoLocalPixelSequence+process.HLTRecopixelvertexingSequence+process.HLTDoLocalStripSequence+process.HLTIterativeTrackingIter02+process.hltPFTracks+process.hltPFMuonMerging)
+    
     return process

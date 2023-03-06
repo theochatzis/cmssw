@@ -46,6 +46,7 @@ void SeedGeneratorFromProtoTracksEDProducer::fillDescriptions(edm::Configuration
   desc.add<bool>("usePV", false);
   desc.add<bool>("includeFourthHit", false);
   desc.add<bool>("produceComplement", false);
+  desc.add<int>("maxComplementTracks",1E9);
 
   edm::ParameterSetDescription psd0;
   psd0.add<std::string>("ComponentName", std::string("SeedFromConsecutiveHitsCreator"));
@@ -69,6 +70,7 @@ SeedGeneratorFromProtoTracksEDProducer::SeedGeneratorFromProtoTracksEDProducer(c
       usePV_(cfg.getParameter<bool>("usePV")),
       includeFourthHit_(cfg.getParameter<bool>("includeFourthHit")),
       produceComplement_(cfg.getParameter<bool>("produceComplement")),
+      maxComplementTracks_(cfg.getParameter<int>("maxComplementTracks")),
       theInputCollectionTag(consumes<reco::TrackCollection>(cfg.getParameter<InputTag>("InputCollection"))),
       theInputVertexCollectionTag(
           consumes<reco::VertexCollection>(cfg.getParameter<InputTag>("InputVertexCollection"))),
@@ -96,6 +98,8 @@ void SeedGeneratorFromProtoTracksEDProducer::produce(edm::Event& ev, const edm::
   ///
   /// need optimization: all es stuff should go out of the loop
   ///
+  int complementTracksCount = 0;
+
   for (TrackCollection::const_iterator it = protos.begin(); it != protos.end(); ++it) {
     const Track& proto = (*it);
     GlobalPoint vtx(proto.vertex().x(), proto.vertex().y(), proto.vertex().z());
@@ -124,8 +128,10 @@ void SeedGeneratorFromProtoTracksEDProducer::produce(edm::Event& ev, const edm::
         }
       }
     }
-    if(produceComplement_ and !keepTrack)
+    if(produceComplement_ and !keepTrack and complementTracksCount < maxComplementTracks_){
       (*leftTracks).push_back(proto);
+      complementTracksCount ++;
+    }
     if (!keepTrack)
       continue;
 

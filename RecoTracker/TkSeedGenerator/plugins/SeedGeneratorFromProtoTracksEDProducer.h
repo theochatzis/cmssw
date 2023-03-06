@@ -23,6 +23,7 @@ private:
   const bool usePV_;
   const bool includeFourthHit_;
   const bool produceComplement_;
+  const int maxComplementTracks_;
   const edm::EDGetTokenT<reco::TrackCollection> theInputCollectionTag;
   const edm::EDGetTokenT<reco::VertexCollection> theInputVertexCollectionTag;
   SeedFromConsecutiveHitsCreator seedCreator_;
