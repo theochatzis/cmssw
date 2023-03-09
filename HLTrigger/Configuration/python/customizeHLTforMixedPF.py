@@ -9,7 +9,7 @@ def customizeHLTForMixedPF(process):
 
     # Customization for the iter0 seeds
     process.hltIter0PFLowPixelSeedsFromPixelTracks.produceComplement = cms.bool(True)
-    process.hltIter0PFLowPixelSeedsFromPixelTracks.maxComplementTracks = cms.int32(500)
+    #process.hltIter0PFLowPixelSeedsFromPixelTracks.maxComplementTracks = cms.int32(500)
     
     # Apply cuts for pixel tracks complement
     process.hltPixelTracksLowPT = cms.EDProducer( "TrackWithVertexSelector",
@@ -25,7 +25,7 @@ def customizeHLTForMixedPF(process):
         copyTrajectories = cms.untracked.bool( False ),
         nSigmaDtVertex = cms.double( 0.0 ),
         timesTag = cms.InputTag( "" ),
-        ptMin = cms.double( -1.0 ), # minimum pT cut
+        ptMin = cms.double( 0.0 ), # minimum pT cut --> try 1.,2. GeV to reduce tracks
         ptMax = cms.double( 6.0 ), # maximum pT cut
         d0Max = cms.double( 999.0 ),
         copyExtras = cms.untracked.bool( False ),
@@ -34,7 +34,7 @@ def customizeHLTForMixedPF(process):
         src = cms.InputTag( "hltIter0PFLowPixelSeedsFromPixelTracks" ), # the complement reco::TrackCollection
         vtxFallback = cms.bool( True ),
         numberOfLostHits = cms.uint32( 999 ),
-        numberOfValidPixelHits = cms.uint32( 3 ),
+        numberOfValidPixelHits = cms.uint32( 4 ),
         timeResosTag = cms.InputTag( "" ),
         useVtx = cms.bool( False ) ## Turning off vertex selection
     )
@@ -53,10 +53,10 @@ def customizeHLTForMixedPF(process):
         Epsilon = cms.double( -0.001 ),
         MaxNormalizedChisq = cms.double( 1000.0 ),
         MinFound = cms.int32( 3 ),
-        TrackProducers = cms.VInputTag( 'hltPixelTracksLowPT','hltMergedTracks' ),
+        TrackProducers = cms.VInputTag( 'hltPixelTracksLowPT','hltPFMuonMerging' ),
         hasSelector = cms.vint32( 0, 0 ),
         indivShareFrac = cms.vdouble( 1.0, 1.0 ),
-        selectedTrackQuals = cms.VInputTag( 'hltPixelTracksLowPT','hltMergedTracks' ),
+        selectedTrackQuals = cms.VInputTag( 'hltPixelTracksLowPT','hltPFMuonMerging' ),
         setsToMerge = cms.VPSet(
           cms.PSet(  pQual = cms.bool( False ),
             tLists = cms.vint32( 0, 1 )
@@ -69,17 +69,19 @@ def customizeHLTForMixedPF(process):
         writeOnlyTrkQuals = cms.bool( False ),
         copyMVA = cms.bool( False )
     )
-
-    # Merging these tracks with muons for final mixed tracks collection
-    process.hltPFMuonMerging.selectedTrackQuals = cms.VInputTag("hltIterL3MuonTracks", "hltPFTracks")
-    process.hltPFMuonMerging.TrackProducers = cms.VInputTag("hltIterL3MuonTracks", "hltPFTracks")
     
-    process.HLTTrackReconstructionForPF = cms.Sequence(process.HLTDoLocalPixelSequence+process.HLTRecopixelvertexingSequence+process.HLTDoLocalStripSequence+process.HLTIterativeTrackingIter02+process.hltPFTracks+process.hltPFMuonMerging+process.hltMuonLinks+process.hltMuons)
+    
+    process.HLTTrackReconstructionForPF = cms.Sequence(process.HLTDoLocalPixelSequence+process.HLTRecopixelvertexingSequence+process.HLTDoLocalStripSequence+process.HLTIterativeTrackingIter02+process.hltPFMuonMerging+process.hltPFTracks+process.hltMuonLinks+process.hltMuons)
+    
+    # use the mixed tracks collection for particle flow
+    process.hltLightPFTracks.TkColList = cms.VInputTag("hltPFTracks")
 
     # Customize the full hlt vertices such that they do not use the complement tracks by requiring at least 1 valid strip hit
+    process.hltVerticesPF.TrackLabel = cms.InputTag("hltPFTracks")
     process.hltVerticesPF.TkFilterParameters.minValidStripHits = cms.int32(1)
     
     # Add the PFTracks in HLTTrackingForBeamspot
-    process.HLTTrackingForBeamSpot = cms.Sequence(process.HLTPreAK4PFJetsRecoSequence+process.HLTL2muonrecoSequence+process.HLTL3muonrecoSequence+process.HLTDoLocalPixelSequence+process.HLTRecopixelvertexingSequence+process.HLTDoLocalStripSequence+process.HLTIterativeTrackingIter02+process.hltPFTracks+process.hltPFMuonMerging)
+    process.HLTTrackingForBeamSpot = cms.Sequence(process.HLTPreAK4PFJetsRecoSequence+process.HLTL2muonrecoSequence+process.HLTL3muonrecoSequence+process.HLTDoLocalPixelSequence+process.HLTRecopixelvertexingSequence+process.HLTDoLocalStripSequence+process.HLTIterativeTrackingIter02+process.hltPFMuonMerging+process.hltPFTracks)
     
     return process
+
