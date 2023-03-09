@@ -73,6 +73,15 @@ def customizeHLTForMixedPF(process):
     
     process.HLTTrackReconstructionForPF = cms.Sequence(process.HLTDoLocalPixelSequence+process.HLTRecopixelvertexingSequence+process.HLTDoLocalStripSequence+process.HLTIterativeTrackingIter02+process.hltPFMuonMerging+process.hltPFTracks+process.hltMuonLinks+process.hltMuons)
     
+    # change to use separate hltLightPFTracks for Taus
+    process.hltLightPFTracksForTaus = process.hltLightPFTracks.clone()
+
+    for iImporter in process.hltParticleFlowBlockForTaus.elementImporters:
+        if iImporter.importerName == cms.string('GeneralTracksImporter'):
+            iImporter.source = 'hltLightPFTracksForTaus'
+    
+    process.HLTParticleFlowSequenceForTaus = cms.Sequence(process.HLTPreshowerSequence+process.hltParticleFlowRecHitECALUnseeded+process.hltParticleFlowRecHitHBHE+process.hltParticleFlowRecHitHF+process.hltParticleFlowRecHitPSUnseeded+process.hltParticleFlowClusterECALUncorrectedUnseeded+process.hltParticleFlowClusterPSUnseeded+process.hltParticleFlowClusterECALUnseeded+process.hltParticleFlowClusterHBHE+process.hltParticleFlowClusterHCAL+process.hltParticleFlowClusterHF+process.hltLightPFTracksForTaus+process.hltParticleFlowBlockForTaus+process.hltParticleFlowForTaus)
+    
     # use the mixed tracks collection for particle flow
     process.hltLightPFTracks.TkColList = cms.VInputTag("hltPFTracks")
 
