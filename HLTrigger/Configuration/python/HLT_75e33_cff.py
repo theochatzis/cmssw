@@ -277,41 +277,33 @@ fragment.schedule = cms.Schedule(*[
     fragment.L1T_TkEle25TkEle12,
     fragment.L1T_TkIsoEm22TkIsoEm12,
     fragment.L1T_TkIsoEle22TkEm12,
-    #HS removed the followings 
-    
-    #fragment.HLT_Ele32_WPTight_Unseeded,
-    #fragment.HLT_Ele26_WP70_Unseeded,
-    #fragment.HLT_Photon108EB_TightID_TightIso_Unseeded,
-    #fragment.HLT_Photon187_Unseeded,
-    #fragment.HLT_DoubleEle25_CaloIdL_PMS2_Unseeded,
-    #fragment.HLT_Diphoton30_23_IsoCaloId_Unseeded,
-    #fragment.HLT_Ele32_WPTight_L1Seeded,
-    #fragment.HLT_Ele26_WP70_L1Seeded,
-    #fragment.HLT_Photon108EB_TightID_TightIso_L1Seeded,
-    #fragment.HLT_Photon187_L1Seeded,
-    #fragment.HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded,
-    #fragment.HLT_DoubleEle23_12_Iso_L1Seeded,
-    #fragment.HLT_Diphoton30_23_IsoCaloId_L1Seeded,
-    
+    fragment.HLT_Ele32_WPTight_Unseeded,
+    fragment.HLT_Ele26_WP70_Unseeded,
+    fragment.HLT_Photon108EB_TightID_TightIso_Unseeded,
+    fragment.HLT_Photon187_Unseeded,
+    fragment.HLT_DoubleEle25_CaloIdL_PMS2_Unseeded,
+    fragment.HLT_Diphoton30_23_IsoCaloId_Unseeded,
+    fragment.HLT_Ele32_WPTight_L1Seeded,
+    fragment.HLT_Ele26_WP70_L1Seeded,
+    fragment.HLT_Photon108EB_TightID_TightIso_L1Seeded,
+    fragment.HLT_Photon187_L1Seeded,
+    fragment.HLT_DoubleEle25_CaloIdL_PMS2_L1Seeded,
+    fragment.HLT_DoubleEle23_12_Iso_L1Seeded,
+    fragment.HLT_Diphoton30_23_IsoCaloId_L1Seeded,
+
     #AC
     #fragment.HLT_DoublePFTau,
-
     fragment.HLT_DoublePFTauHPS,
-
     #HS
    # fragment.HLT_DoubleMediumChargedIsoPFTauHPS,
-
-
     ### Removed temporarily until final decision on L1T tau Phase-2
     #fragment.L1T_DoubleNNTau52,
     #fragment.L1T_SingleNNTau150,
-
-    #HS removed the followings 
-    #fragment.MC_JME,
-    #fragment.MC_BTV,
-    #fragment.MC_Ele5_Open_Unseeded,
-    #fragment.MC_Ele5_Open_L1Seeded,
-
+    
+    fragment.MC_JME,
+    fragment.MC_BTV,
+    fragment.MC_Ele5_Open_Unseeded,
+    fragment.MC_Ele5_Open_L1Seeded,
     fragment.HLTriggerFinalPath,
     fragment.HLTAnalyzerEndpath,
 ])
