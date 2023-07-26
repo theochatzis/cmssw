@@ -92,6 +92,15 @@ fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/hltESPKFTrajectorySm
 fragment.load("HLTrigger/Configuration/HLT_75e33/eventsetup/trackdnn_source_cfi")
 
 fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_AK4PFPuppiJet520_cfi")
+
+
+#AC
+#fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_DoublePFTau_cfi")
+fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_DoublePFTauHPS_cfi")
+#HS
+#fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_DoubleMediumChargedIsoPFTauHPS_cfi")
+
+
 fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_L1Seeded_cfi")
 fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_Diphoton30_23_IsoCaloId_Unseeded_cfi")
 fragment.load("HLTrigger/Configuration/HLT_75e33/paths/HLT_DoubleEle23_12_Iso_L1Seeded_cfi")
@@ -268,7 +277,6 @@ fragment.schedule = cms.Schedule(*[
     fragment.L1T_TkEle25TkEle12,
     fragment.L1T_TkIsoEm22TkIsoEm12,
     fragment.L1T_TkIsoEle22TkEm12,
-
     fragment.HLT_Ele32_WPTight_Unseeded,
     fragment.HLT_Ele26_WP70_Unseeded,
     fragment.HLT_Photon108EB_TightID_TightIso_Unseeded,
@@ -283,15 +291,19 @@ fragment.schedule = cms.Schedule(*[
     fragment.HLT_DoubleEle23_12_Iso_L1Seeded,
     fragment.HLT_Diphoton30_23_IsoCaloId_L1Seeded,
 
+    #AC
+    #fragment.HLT_DoublePFTau,
+    fragment.HLT_DoublePFTauHPS,
+    #HS
+   # fragment.HLT_DoubleMediumChargedIsoPFTauHPS,
     ### Removed temporarily until final decision on L1T tau Phase-2
     #fragment.L1T_DoubleNNTau52,
     #fragment.L1T_SingleNNTau150,
-
+    
     fragment.MC_JME,
     fragment.MC_BTV,
     fragment.MC_Ele5_Open_Unseeded,
     fragment.MC_Ele5_Open_L1Seeded,
-
     fragment.HLTriggerFinalPath,
     fragment.HLTAnalyzerEndpath,
 ])
