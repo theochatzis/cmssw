@@ -82,10 +82,13 @@ private:
 
   // Use vertices for Neutral particles ?
   bool useVerticesForNeutral_;
-
+  
   // Take PF cluster calibrations from Global Tag ?
   bool useCalibrationsFromDB_;
   std::string calibrationsLabel_;
+  
+  // Use PF hadron calibrations in forward region (eta > 2.5) ?
+  bool skipForwardCalibrations_;
 
   bool postHFCleaning_;
   // Name of the calibration functions to read from the database
@@ -186,11 +189,15 @@ PFProducer::PFProducer(const edm::ParameterSet& iConfig)
   double dptRel_DispVtx = iConfig.getParameter<double>("dptRel_DispVtx");
 
   useCalibrationsFromDB_ = iConfig.getParameter<bool>("useCalibrationsFromDB");
-
+  
   if (useCalibrationsFromDB_) {
     calibrationsLabel_ = iConfig.getParameter<std::string>("calibrationsLabel");
     perfToken_ = esConsumes<edm::Transition::BeginRun>(edm::ESInputTag("", calibrationsLabel_));
   }
+
+  skipForwardCalibrations_ = iConfig.getParameter<bool>("skipForwardCalibrations");
+  pfAlgo_.setSkipForward(skipForwardCalibrations_);
+
   // Secondary tracks and displaced vertices parameters
   pfAlgo_.setDisplacedVerticesParameters(
       rejectTracks_Bad, rejectTracks_Step45, usePFNuclearInteractions, usePFConversions, usePFDecays, dptRel_DispVtx);
@@ -422,9 +429,14 @@ void PFProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) 
   desc.add<double>("pf_nsigma_HFEM", 1.0);
   desc.add<double>("pf_nsigma_HFHAD", 1.0);
 
+  // option to allow skipping the application of hadron calibrations in forward region (eta>2.5)
+  desc.add<bool>("skipForwardCalibrations", false);
+  
   // ECAL/HCAL PF cluster calibration : take it from global tag ?
   desc.add<bool>("useCalibrationsFromDB", true);
   desc.add<std::string>("calibrationsLabel", "");
+  
+
 
   // Post HF cleaning
   desc.add<bool>("postHFCleaning", false);

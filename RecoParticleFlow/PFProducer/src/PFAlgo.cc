@@ -702,7 +702,7 @@ bool PFAlgo::recoTracksNotHCAL(const reco::PFBlock& block,
     calibEcal = std::max(totalEcal, 0.);
     calibHcal = 0.;
     calibration_.energyEmHad(
-        trackMomentum, calibEcal, calibHcal, clusterRef->positionREP().Eta(), clusterRef->positionREP().Phi());
+        trackMomentum, calibEcal, calibHcal, clusterRef->positionREP().Eta(), clusterRef->positionREP().Phi(), skipForward_);
     if (totalEcal > 0.)
       slopeEcal = calibEcal / totalEcal;
 
@@ -2140,7 +2140,8 @@ void PFAlgo::createCandidatesHCAL(const reco::PFBlock& block,
                                calibEcal,
                                calibHcal,
                                hclusterref->positionREP().Eta(),
-                               hclusterref->positionREP().Phi());
+                               hclusterref->positionREP().Phi(),
+                               skipForward_);
       caloEnergy = calibEcal + calibHcal;
       if (totalEcal > 0.)
         slopeEcal = calibEcal / totalEcal;
@@ -2985,7 +2986,7 @@ void PFAlgo::createCandidatesHCALUnlinked(const reco::PFBlock& block,
       calibEcal = totalEcal;
     } else {
       calibration_.energyEmHad(
-          -1., calibEcal, calibHcal, hclusterRef->positionREP().Eta(), hclusterRef->positionREP().Phi());
+          -1., calibEcal, calibHcal, hclusterRef->positionREP().Eta(), hclusterRef->positionREP().Phi(), skipForward_);
     }
 
     auto& cand = (*pfCandidates_)[reconstructCluster(*hclusterRef, calibEcal + calibHcal)];

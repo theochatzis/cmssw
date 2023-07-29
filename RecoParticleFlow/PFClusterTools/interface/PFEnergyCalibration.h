@@ -59,7 +59,7 @@ public:
       bool applyCrackCorrections) const;
 
   // ECAL+HCAL (abc) calibration, with E and eta dependent coefficients, for hadrons
-  void energyEmHad(double t, double& e, double& h, double eta, double phi) const;
+  void energyEmHad(double t, double& e, double& h, double eta, double phi, bool skipForward) const;
 
   // Set the run-dependent calibration functions from the global tag
   void setCalibrationFunctions(const PerformancePayloadFromTFormula* thePFCal) { pfCalibrations = thePFCal; }

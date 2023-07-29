@@ -61,7 +61,8 @@ public:
          PFEnergyCalibration& calibration,
          PFEnergyCalibrationHF& thepfEnergyCalibrationHF,
          const edm::ParameterSet& pset);
-
+  
+  void setSkipForward(bool skipForward) { skipForward_ = skipForward; }
   void setHOTag(bool ho) { useHO_ = ho; }
   void setMuonHandle(const edm::Handle<reco::MuonCollection>& muons) { muonHandle_ = muons; }
 
@@ -256,7 +257,10 @@ private:
 
   PFEnergyCalibration& calibration_;
   PFEnergyCalibrationHF& thepfEnergyCalibrationHF_;
-
+  
+  /// boolean to skip application of forward region hadron calibrations
+  bool skipForward_; 
+  
   bool useHO_;
 
   std::unique_ptr<PFMuonAlgo> pfmu_;

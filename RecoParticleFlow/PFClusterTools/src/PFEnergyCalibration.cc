@@ -192,7 +192,7 @@ PFEnergyCalibration::CalibratedEndcapPFClusterEnergies PFEnergyCalibration::cali
   return {cluscalibe, ePS1, ePS2};
 }
 
-void PFEnergyCalibration::energyEmHad(double t, double& e, double& h, double eta, double phi) const {
+void PFEnergyCalibration::energyEmHad(double t, double& e, double& h, double eta, double phi, bool skipForward) const {
   // Use calorimetric energy as true energy for neutral particles
   const double tt = t;
   const double ee = e;
@@ -203,7 +203,8 @@ void PFEnergyCalibration::energyEmHad(double t, double& e, double& h, double eta
   t = min(999.9, max(tt, e + h));
   if (t < 1.)
     return;
-
+  if (absEta > 2.5 && skipForward)
+    return;
   // Barrel calibration
   if (absEta < 1.48) {
     // The energy correction
