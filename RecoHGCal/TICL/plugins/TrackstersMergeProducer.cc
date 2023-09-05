@@ -262,10 +262,15 @@ void TrackstersMergeProducer::produce(edm::Event &evt, const edm::EventSetup &es
   const auto &layerClusters = evt.get(clusters_token_);
   const auto &layerClustersTimes = evt.get(clustersTime_token_);
   const auto &muons = evt.get(muons_token_);
-  const auto &trackTime = evt.get(tracks_time_token_);
-  const auto &trackTimeErr = evt.get(tracks_time_err_token_);
-  const auto &trackTimeQual = evt.get(tracks_time_quality_token_);
-  
+  edm::ValueMap<float> trackTime;
+  edm::ValueMap<float> trackTimeErr;
+  edm::ValueMap<float> trackTimeQual;
+  if(useMTDTiming_){
+    trackTime = evt.get(tracks_time_token_);
+    trackTimeErr = evt.get(tracks_time_err_token_);
+    trackTimeQual = evt.get(tracks_time_quality_token_);
+  }
+
   // Linking
   linkingAlgo_->linkTracksters(
       track_h, trackTime, trackTimeErr, trackTimeQual, useMTDTiming_, muons, trackstersclue3d_h, *resultCandidates, *resultFromTracks);
