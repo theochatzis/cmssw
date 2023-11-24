@@ -112,8 +112,8 @@ def customizeHLTforMTD(process):
 
     _endcapAlgo = cms.PSet(
         algoName = cms.string("MTDRecHitAlgo"),
-        thresholdToKeep = cms.double(0.0425),    # MeV
-        calibrationConstant = cms.double(0.085), # MeV/MIP
+        thresholdToKeep = cms.double(0.005),    # MeV
+        calibrationConstant = cms.double(0.015), # MeV/MIP
     )
 
     from Configuration.Eras.Modifier_phase2_etlV4_cff import phase2_etlV4
@@ -239,15 +239,15 @@ def customizeHLTforMTD(process):
         bsTimeSpread = cms.double(0.2),
     )
 
-    process.generalTracksTOFPIDProducer = cms.EDProducer('TOFPIDProducer',
-        tracksSrc    = cms.InputTag('generalTracks'),
-        t0Src        = cms.InputTag('generalTracksWithMTD:generalTrackt0'),
-        tmtdSrc      = cms.InputTag('generalTracksWithMTD:generalTracktmtd'),
-        sigmat0Src   = cms.InputTag('generalTracksWithMTD:generalTracksigmat0'),
-        sigmatmtdSrc = cms.InputTag('generalTracksWithMTD:generalTracksigmatmtd'),
-        tofkSrc      = cms.InputTag('generalTracksWithMTD:generalTrackTofK'),
-        tofpSrc      = cms.InputTag('generalTracksWithMTD:generalTrackTofP'),
-        vtxsSrc      = cms.InputTag('unsortedOfflinePrimaryVertices'),
+    process.generalTracksTOFPIDProducer = cms.EDProducer("TOFPIDProducer",
+        tracksSrc    = cms.InputTag("generalTracks"),
+        t0Src        = cms.InputTag("generalTracksWithMTD:generalTrackt0"),
+        tmtdSrc      = cms.InputTag("generalTracksWithMTD:generalTracktmtd"),
+        sigmat0Src   = cms.InputTag("generalTracksWithMTD:generalTracksigmat0"),
+        sigmatmtdSrc = cms.InputTag("generalTracksWithMTD:generalTracksigmatmtd"),
+        tofkSrc      = cms.InputTag("generalTracksWithMTD:generalTrackTofK"),
+        tofpSrc      = cms.InputTag("generalTracksWithMTD:generalTrackTofP"),
+        vtxsSrc      = cms.InputTag("unsortedOfflinePrimaryVertices4D"),
         vtxMaxSigmaT      = cms.double(0.025),
         maxDz             = cms.double(0.1),
         maxDtSignificance = cms.double(5.0),
@@ -269,36 +269,130 @@ def customizeHLTforMTD(process):
     
 
     ## Vertices
+    
+    process.unsortedOfflinePrimaryVertices4DnoPID = cms.EDProducer("PrimaryVertexProducer",
+        TkClusParameters = cms.PSet(
+            TkDAClusParameters = cms.PSet(
+                Tmin = cms.double(4.0),
+                Tpurge = cms.double(4.0),
+                Tstop = cms.double(2.0),
+                convergence_mode = cms.int32(0),
+                coolingFactor = cms.double(0.6),
+                d0CutOff = cms.double(3.0),
+                delta_highT = cms.double(0.01),
+                delta_lowT = cms.double(0.001),
+                dtCutOff = cms.double(4.0),
+                dzCutOff = cms.double(3.0),
+                t0Max = cms.double(1.0),
+                tmerge = cms.double(0.1),
+                uniquetrkminp = cms.double(0.0),
+                uniquetrkweight = cms.double(0.8),
+                vertexSize = cms.double(0.006),
+                vertexSizeTime = cms.double(0.008),
+                zmerge = cms.double(0.01),
+                zrange = cms.double(4.0)
+            ),
+            algorithm = cms.string('DA2D_vect')
+        ),
+        TkFilterParameters = cms.PSet(
+            algorithm = cms.string('filter'),
+            maxD0Error = cms.double(1.0),
+            maxD0Significance = cms.double(4.0),
+            maxDzError = cms.double(1.0),
+            maxEta = cms.double(4.0),
+            maxNormalizedChi2 = cms.double(10.0),
+            minPixelLayersWithHits = cms.int32(2),
+            minPt = cms.double(0.0),
+            minSiliconLayersWithHits = cms.int32(5),
+            trackQuality = cms.string('any')
+        ),
+        TrackLabel = cms.InputTag("generalTracks"),
+        TrackTimeResosLabel = cms.InputTag("generalTracksWithMTD","generalTracksigmat0"),
+        TrackTimesLabel = cms.InputTag("generalTracksWithMTD","generalTrackt0"),
+        beamSpotLabel = cms.InputTag("offlineBeamSpot"),
+        isRecoveryIteration = cms.bool(False),
+        recoveryVtxCollection = cms.InputTag(""),
+        verbose = cms.untracked.bool(False),
+        vertexCollections = cms.VPSet(
+            cms.PSet(
+                algorithm = cms.string('AdaptiveVertexFitter'),
+                chi2cutoff = cms.double(2.5),
+                label = cms.string(''),
+                maxDistanceToBeam = cms.double(1.0),
+                minNdof = cms.double(0.0),
+                useBeamConstraint = cms.bool(False)
+            ),
+            cms.PSet(
+                algorithm = cms.string('AdaptiveVertexFitter'),
+                chi2cutoff = cms.double(2.5),
+                label = cms.string('WithBS'),
+                maxDistanceToBeam = cms.double(1.0),
+                minNdof = cms.double(2.0),
+                useBeamConstraint = cms.bool(True)
+            )
+        )
+)
+    
+    process.tofPID4DnoPID = cms.EDProducer("TOFPIDProducer",
+        fixedT0Error = cms.double(0),
+        maxDtSignificance = cms.double(5),
+        maxDz = cms.double(0.1),
+        mightGet = cms.optional.untracked.vstring,
+        minProbHeavy = cms.double(0.75),
+        sigmat0Src = cms.InputTag("generalTracksWithMTD","generalTracksigmat0"),
+        sigmatmtdSrc = cms.InputTag("generalTracksWithMTD","generalTracksigmatmtd"),
+        t0Src = cms.InputTag("generalTracksWithMTD","generalTrackt0"),
+        tmtdSrc = cms.InputTag("generalTracksWithMTD","generalTracktmtd"),
+        tofkSrc = cms.InputTag("generalTracksWithMTD","generalTrackTofK"),
+        tofpSrc = cms.InputTag("generalTracksWithMTD","generalTrackTofP"),
+        tracksSrc = cms.InputTag("generalTracks"),
+        vtxMaxSigmaT = cms.double(0.025),
+        vtxsSrc = cms.InputTag("unsortedOfflinePrimaryVertices4DnoPID")
+    )
+        
     process.unsortedOfflinePrimaryVertices4D = cms.EDProducer("PrimaryVertexProducer",
         TkClusParameters = cms.PSet( # clustering parameters
             TkDAClusParameters = cms.PSet(
-                Tmin = cms.double(2.0),
-                Tpurge = cms.double(2.0),
-                Tstop = cms.double(0.5),
+                Tmin = cms.double(4.0),
+                Tpurge = cms.double(4.0),
+                Tstop = cms.double(2.0),
+                convergence_mode = cms.int32(0),
                 coolingFactor = cms.double(0.6),
                 d0CutOff = cms.double(3.0),
+                delta_highT = cms.double(0.01),
+                delta_lowT = cms.double(0.001),
+                dtCutOff = cms.double(4.0),
                 dzCutOff = cms.double(3.0),
+                t0Max = cms.double(1.0),
+                tmerge = cms.double(0.1),
+                uniquetrkminp = cms.double(0.0),
                 uniquetrkweight = cms.double(0.8),
                 vertexSize = cms.double(0.006),
-                zmerge = cms.double(0.01)
+                vertexSizeTime = cms.double(0.008),
+                zmerge = cms.double(0.01),
+                zrange = cms.double(4.0)
             ),
             algorithm = cms.string('DA2D_vect') # if use this option insted of DA_vect which was default it activates the 4D vertex reco
             # note: for 4D also needs the maps for tracks times and resolution labels (see bellow)
         ),
         TkFilterParameters = cms.PSet(
             algorithm = cms.string('filter'),
+            maxD0Error = cms.double(1.0),
             maxD0Significance = cms.double(4.0),
+            maxDzError = cms.double(1.0),
             maxEta = cms.double(4.0),
             maxNormalizedChi2 = cms.double(10.0),
             minPixelLayersWithHits = cms.int32(2),
-            minPt = cms.double(0.9),
+            minPt = cms.double(0.0),
             minSiliconLayersWithHits = cms.int32(5),
             trackQuality = cms.string('any')
         ),
         TrackLabel = cms.InputTag("generalTracks"),
         beamSpotLabel = cms.InputTag("offlineBeamSpot"),
-        TrackTimesLabel = cms.InputTag("generalTracksTOFPIDProducer:t0"),
-        TrackTimeResosLabel = cms.InputTag("generalTracksTOFPIDProducer:sigmat0"),
+        # TrackTimesLabel = cms.InputTag("generalTracksTOFPIDProducer:t0"),
+        # TrackTimeResosLabel = cms.InputTag("generalTracksTOFPIDProducer:sigmat0"),
+        TrackTimeResosLabel = cms.InputTag("tofPID4DnoPID","sigmat0safe"),
+        TrackTimesLabel = cms.InputTag("tofPID4DnoPID","t0safe"),
         #TrackTimesLabel = cms.InputTag("generalTracksTOFPIDProducer:t0safe"),
         #TrackTimeResosLabel = cms.InputTag("generalTracksTOFPIDProducer:sigmat0safe"),   
         verbose = cms.untracked.bool(False),
@@ -321,6 +415,8 @@ def customizeHLTforMTD(process):
             )
         )
     )
+    
+    process.trackWithVertexRefSelectorBeforeSorting.vertexTag = cms.InputTag("unsortedOfflinePrimaryVertices4D") 
 
     process.offlinePrimaryVertices4D = cms.EDProducer("RecoChargedRefCandidatePrimaryVertexSorter",
         assignment = cms.PSet(
@@ -330,14 +426,14 @@ def customizeHLTforMTD(process):
             OnlyUseFirstDz = cms.bool(False),
             PtMaxCharged = cms.double(-1),
             maxDistanceToJetAxis = cms.double(0.07),
-            maxDtSigForPrimaryAssignment = cms.double(4.0),
+            maxDtSigForPrimaryAssignment = cms.double(3),
             maxDxyForJetAxisAssigment = cms.double(0.1),
             maxDxyForNotReconstructedPrimary = cms.double(0.01),
             maxDxySigForNotReconstructedPrimary = cms.double(2),
             maxDzErrorForPrimaryAssignment = cms.double(0.05),
             maxDzForJetAxisAssigment = cms.double(0.1),
             maxDzForPrimaryAssignment = cms.double(0.1),
-            maxDzSigForPrimaryAssignment = cms.double(5.0),
+            maxDzSigForPrimaryAssignment = cms.double(5),
             maxJetDeltaR = cms.double(0.5),
             minJetPt = cms.double(25),
             preferHighRanked = cms.bool(False),
@@ -345,7 +441,7 @@ def customizeHLTforMTD(process):
             useVertexFit = cms.bool(True)
         ),
         jets = cms.InputTag("ak4CaloJetsForTrk"),
-        particles = cms.InputTag("trackRefsForJetsBeforeSorting"),
+        particles = cms.InputTag("trackRefsForJetsBeforeSorting"), # in this we have used the unsortedOfflinePrimaryVertices4D
         produceAssociationToOriginalVertices = cms.bool(False),
         produceNoPileUpCollection = cms.bool(False),
         producePileUpCollection = cms.bool(False),
@@ -356,8 +452,6 @@ def customizeHLTforMTD(process):
         ),
         trackTimeTag = cms.InputTag("generalTracksTOFPIDProducer:t0"),
         trackTimeResoTag = cms.InputTag("generalTracksTOFPIDProducer:sigmat0"),
-        #trackTimeTag = cms.InputTag("generalTracksTOFPIDProducer:t0safe"),
-        #trackTimeResoTag = cms.InputTag("generalTracksTOFPIDProducer:sigmat0safe"),
         usePVMET = cms.bool(True),
         vertices = cms.InputTag("unsortedOfflinePrimaryVertices4D")
     )
@@ -390,6 +484,10 @@ def customizeHLTforMTD(process):
     process.pfTICL.useMTDTiming = cms.bool(True) # uses MTD timing  
     process.pfTICL.useTimingAverage = cms.bool(True) # combined time from both MTD and HGCAL if they both valid time (time error > 0)
 
+    process.ticlTrackstersMerge.useMTDTiming = cms.bool(True)
+    process.ticlTrackstersMerge.tracksTime = cms.InputTag("generalTracksTOFPIDProducer","t0")
+    process.ticlTrackstersMerge.tracksTimeErr = cms.InputTag("generalTracksTOFPIDProducer","sigmat0")
+    process.ticlTrackstersMerge.tracksTimeQual = cms.InputTag("generalTracksMtdTrackQualityMVA","mtdQualMVA")
     
     ## tasks changes
     process.mtdRecoTask = cms.Task(
@@ -399,10 +497,12 @@ def customizeHLTforMTD(process):
         process.mtdTrackingRecHits,
         process.generalTracksWithMTD,
         process.generalTracksMtdTrackQualityMVA,
-        process.generalTracksTOFPIDProducer
+        process.generalTracksTOFPIDProducer,
+        process.tofPID4DnoPID
     )
     
     process.vertex4DrecoTask = cms.Task(
+        process.unsortedOfflinePrimaryVertices4DnoPID,
         process.unsortedOfflinePrimaryVertices4D,
         process.offlinePrimaryVertices4D,
         process.goodOfflinePrimaryVertices4D
