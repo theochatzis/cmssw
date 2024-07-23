@@ -3,15 +3,6 @@ import FWCore.ParameterSet.Config as cms
 def customizeHLTforTrimmedTrackingVertexing(process):
   ''' define the modules needed for producing the trimmed pixel vertex collection
   '''
-#  process.hltESPTTRHBuilderPixelOnly = cms.ESProducer("TkTransientTrackingRecHitBuilderESProducer",
-#    ComponentName                       = cms.string("hltESPTTRHBuilderPixelOnly"),
-#    ComputeCoarseLocalPositionFromDisk  = cms.bool(False),
-#    StripCPE                            = cms.string("Fake"),
-#    PixelCPE                            = cms.string("PixelCPEGeneric"),
-#    Matcher                             = cms.string("StandardMatcher"),
-#    Phase2StripCPE                      = cms.string(""),
-#    appendToDataLabel                   = cms.string("")
-#  )
   process.HLTPSetPvClusterComparerForIT = cms.PSet( 
     track_chi2_max  = cms.double(20.0),
     track_pt_max    = cms.double(20.0),
@@ -21,7 +12,7 @@ def customizeHLTforTrimmedTrackingVertexing(process):
   process.hltTrimmedPixelVertices = cms.EDProducer("PixelVertexCollectionTrimmer",
     src             = cms.InputTag("hltPhase2PixelVertices"),
     maxVtx          = cms.uint32(100),
-    fractionSumPt2  = cms.double(0.5),
+    fractionSumPt2  = cms.double(0.3),
     minSumPt2       = cms.double(0.0),
     PVcomparer      = cms.PSet(refToPSet_=cms.string("HLTPSetPvClusterComparerForIT"))
   )
