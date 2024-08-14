@@ -26,6 +26,8 @@ HLTHtMhtProducer::HLTHtMhtProducer(const edm::ParameterSet& iConfig)
       minPtJetMht_(iConfig.getParameter<double>("minPtJetMht")),
       maxEtaJetHt_(iConfig.getParameter<double>("maxEtaJetHt")),
       maxEtaJetMht_(iConfig.getParameter<double>("maxEtaJetMht")),
+      minEtaFwdJetMht_(iConfig.getParameter<double>("minEtaFwdJetMht")),
+      minPtFwdJetMht_(iConfig.getParameter<double>("minPtFwdJetMht")),
       jetsLabel_(iConfig.getParameter<edm::InputTag>("jetsLabel")),
       pfCandidatesLabel_(iConfig.getParameter<edm::InputTag>("pfCandidatesLabel")) {
   m_theJetToken = consumes<reco::CandidateView>(jetsLabel_);
@@ -50,6 +52,8 @@ void HLTHtMhtProducer::fillDescriptions(edm::ConfigurationDescriptions& descript
   desc.add<double>("minPtJetMht", 30.);
   desc.add<double>("maxEtaJetHt", 3.);
   desc.add<double>("maxEtaJetMht", 5.);
+  desc.add<double>("minEtaFwdJetMht", 10.);
+  desc.add<double>("minPtFwdJetMht", 20.);
   desc.add<edm::InputTag>("jetsLabel", edm::InputTag("hltCaloJetL1FastJetCorrected"));
   desc.add<edm::InputTag>("pfCandidatesLabel", edm::InputTag("hltParticleFlow"));
   descriptions.add("hltHtMhtProducer", desc);
@@ -85,7 +89,13 @@ void HLTHtMhtProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup
       ++nj_ht;
     }
 
-    if (pt > minPtJetMht_ && std::abs(eta) < maxEtaJetMht_) {
+    if (pt > minPtJetMht_ && std::abs(eta) < maxEtaJetMht_ && std::abs(eta) < minEtaFwdJetMht_) {
+      mhx -= px;
+      mhy -= py;
+      ++nj_mht;
+    }
+
+    if (pt > minPtFwdJetMht_ && std::abs(eta) < maxEtaJetMht_ && std::abs(eta) > minEtaFwdJetMht_) {
       mhx -= px;
       mhy -= py;
       ++nj_mht;

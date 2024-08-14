@@ -55,6 +55,10 @@ private:
   double maxEtaJetHt_;
   double maxEtaJetMht_;
 
+  /// Requirements for forward jets for MHT (they are used in case maxJetEtaMht > minEtaFwdJetMht)
+  double minEtaFwdJetMht_;
+  double minPtFwdJetMht_;
+  
   /// Input jet, PFCandidate collections
   edm::InputTag jetsLabel_;
   edm::InputTag pfCandidatesLabel_;
