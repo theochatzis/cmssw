@@ -1,4 +1,5 @@
 import FWCore.ParameterSet.Config as cms
+from HLTrigger.Configuration.common import producers_by_type
 
 def customizeHLTforMHT(process):
   # find automatically all HLT HT/MHT producers
