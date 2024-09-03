@@ -96,7 +96,7 @@ def customizeHLTforTrimmedTrackingMixedPF(process):
     dzMax = cms.double( 999.0 ),
     etaMin = cms.double( 0.0 ),
     etaMax = cms.double( 5.0 ),
-    quality = cms.string( "highPurity" ), ##loose, tight, highPurity
+    quality = cms.string( "" ), ##loose, tight, highPurity # quality isn't working removes everything
     copyTrajectories = cms.untracked.bool( False ),
     nSigmaDtVertex = cms.double( 0.0 ),
     timesTag = cms.InputTag( "" ),
@@ -109,7 +109,7 @@ def customizeHLTforTrimmedTrackingMixedPF(process):
     src = cms.InputTag( "initialStepSeeds" ), # the complement reco::TrackCollection
     vtxFallback = cms.bool( False ),
     numberOfLostHits = cms.uint32( 999 ),
-    numberOfValidPixelHits = cms.uint32( 0 ), # using only quadraplets 
+    numberOfValidPixelHits = cms.uint32( 4 ), # using only quadraplets 
     timeResosTag = cms.InputTag( "" ),
     useVtx = cms.bool( True ) ## Turning off vertex selection
   )
