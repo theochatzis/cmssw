@@ -100,18 +100,18 @@ def customizeHLTforTrimmedTrackingMixedPF(process):
     copyTrajectories = cms.untracked.bool( False ),
     nSigmaDtVertex = cms.double( 0.0 ),
     timesTag = cms.InputTag( "" ),
-    ptMin = cms.double( 0.0 ), # minimum pT cut 
-    ptMax = cms.double( 5000000.0 ), # maximum pT cut // results not super sensitive to that could keep even higher
+    ptMin = cms.double( 0.5 ), # minimum pT cut 
+    ptMax = cms.double( 5.0 ), # maximum pT cut // results not super sensitive to that could keep even higher
     d0Max = cms.double( 999.0 ),
     copyExtras = cms.untracked.bool( False ),
-    nVertices = cms.uint32( 10000 ),
+    nVertices = cms.uint32( 0 ),
     vertexTag = cms.InputTag( "hltTrimmedPixelVertices" ),
     src = cms.InputTag( "initialStepSeeds" ), # the complement reco::TrackCollection
     vtxFallback = cms.bool( False ),
     numberOfLostHits = cms.uint32( 999 ),
     numberOfValidPixelHits = cms.uint32( 0 ), # using only quadraplets 
     timeResosTag = cms.InputTag( "" ),
-    useVtx = cms.bool( False ) ## Turning off vertex selection
+    useVtx = cms.bool( True ) ## Turning off vertex selection
   )
   
   process.initialStepSequence.insert(process.initialStepSequence.index(process.initialStepSeeds)+1, process.hltPixelTracksForPU)
@@ -151,7 +151,7 @@ def customizeHLTforTrimmedTrackingMixedPF(process):
   Remove tracks without valid strip hits from vertices, such that these extra pixel tracks don't affect the vertices.
   '''
   process.unsortedOfflinePrimaryVertices.TrackLabel = cms.InputTag("mixedGeneralTracks")
-  process.unsortedOfflinePrimaryVertices.TkFilterParameters.minValidStripHits = cms.int32(0)
+  process.unsortedOfflinePrimaryVertices.TkFilterParameters.minValidStripHits = cms.int32(1)
 
 
   process.trackWithVertexRefSelectorBeforeSorting = process.trackWithVertexRefSelectorBeforeSorting.clone(
