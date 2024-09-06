@@ -109,12 +109,27 @@ def customizeHLTforTrimmedTrackingMixedPF(process):
     src = cms.InputTag( "initialStepSeeds" ), # the complement reco::TrackCollection
     vtxFallback = cms.bool( False ),
     numberOfLostHits = cms.uint32( 999 ),
-    numberOfValidPixelHits = cms.uint32( 4 ), # using only quadraplets 
+    numberOfValidPixelHits = cms.uint32( 3 ), # using only quadraplets 
     timeResosTag = cms.InputTag( "" ),
     useVtx = cms.bool( True ) ## Turning off vertex selection
   )
-  
+
   process.initialStepSequence.insert(process.initialStepSequence.index(process.initialStepSeeds)+1, process.hltPixelTracksForPU)
+  
+  process.hltPixelTracksForPUTrackCutClassifier = process.initialStepTrackCutClassifier.clone(
+    src = cms.InputTag("hltPixelTracksForPU"),
+  )
+  
+  process.initialStepSequence.insert(process.initialStepSequence.index(process.hltPixelTracksForPU)+1, process.hltPixelTracksForPUTrackCutClassifier)
+
+  process.hltPixelTracksForPUTrackSelectionHighPurity = process.initialStepTrackSelectionHighPurity.clone(
+    originalMVAVals = cms.InputTag("hltPixelTracksForPUTrackCutClassifier","MVAValues"),
+    originalQualVals = cms.InputTag("hltPixelTracksForPUTrackCutClassifier","QualityMasks"),
+    originalSource = cms.InputTag("hltPixelTracksForPU")
+  )
+  
+  process.initialStepSequence.insert(process.initialStepSequence.index(process.hltPixelTracksForPUTrackCutClassifier)+1, process.hltPixelTracksForPUTrackSelectionHighPurity)
+  
   
   # Making the mixed tracks that are going to feed all the subsequent steps
   process.mixedGeneralTracks  = cms.EDProducer( "TrackListMerger",
@@ -125,10 +140,10 @@ def customizeHLTforTrimmedTrackingMixedPF(process):
       Epsilon = cms.double( -0.001 ),
       MaxNormalizedChisq = cms.double( 1000.0 ),
       MinFound = cms.int32( 3 ),
-      TrackProducers = cms.VInputTag( 'hltPixelTracksForPU','generalTracks' ),
+      TrackProducers = cms.VInputTag( 'hltPixelTracksForPUTrackSelectionHighPurity','generalTracks' ),
       hasSelector = cms.vint32( 0, 0),
       indivShareFrac = cms.vdouble( 1.0, 1.0),
-      selectedTrackQuals = cms.VInputTag( 'hltPixelTracksForPU','generalTracks' ),
+      selectedTrackQuals = cms.VInputTag( 'hltPixelTracksForPUTrackSelectionHighPurity','generalTracks' ),
       setsToMerge = cms.VPSet(
         cms.PSet(  pQual = cms.bool( False ),
           tLists = cms.vint32( 0, 1)
