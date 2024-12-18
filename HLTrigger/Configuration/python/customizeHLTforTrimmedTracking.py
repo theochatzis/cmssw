@@ -4,18 +4,12 @@ from HLTrigger.Configuration.common import producers_by_type
 def customizeHLTforTrimmedTrackingVertexing(process):
   ''' define the modules needed for producing the trimmed pixel vertex collection
   '''
-  process.HLTPSetPvClusterComparerForIT = cms.PSet( 
-    track_chi2_max  = cms.double(20.0),
-    track_pt_max    = cms.double(20.0),
-    track_prob_min  = cms.double(-1.0),
-    track_pt_min    = cms.double(1.0)
-  )
   process.hltTrimmedPixelVertices = cms.EDProducer("PixelVertexCollectionTrimmer",
     src             = cms.InputTag("hltPhase2PixelVertices"),
-    maxVtx          = cms.uint32(100),
+    maxVtx          = cms.uint32(300),
     fractionSumPt2  = cms.double(0.3),
     minSumPt2       = cms.double(0.0),
-    PVcomparer      = cms.PSet(refToPSet_=cms.string("HLTPSetPvClusterComparerForIT"))
+    PVcomparer      = cms.PSet(refToPSet_=cms.string("pSetPvClusterComparerForIT"))
   )
   process.HLTTrackingV61Sequence.insert(process.HLTTrackingV61Sequence.index(process.hltPhase2PixelVertices)+1, process.hltTrimmedPixelVertices)
   return process
@@ -38,15 +32,18 @@ def customizeHLTforTrimmedTrackingHighPtTripletStep(process):
   '''
   process.hltTrackingRegionFromTrimmedVertices = cms.EDProducer('GlobalTrackingRegionWithVerticesEDProducer',
     RegionPSet = cms.PSet(
-      ptMin                   = cms.double(0.5),
+      ptMin                   = cms.double(0.9),
       beamSpot                = cms.InputTag('hltOnlineBeamSpot'),
-      pixelClustersForScaling = cms.InputTag('siPixelClusters'),
+      #pixelClustersForScaling = cms.InputTag('siPixelClusters'),
       VertexCollection        = cms.InputTag('hltTrimmedPixelVertices'),
+      originRadius            = cms.double(0.02),
+      precise                 = cms.bool(True),
     ),
     mightGet = cms.optional.untracked.vstring,
   )
   process.highPtTripletStepHitDoublets.trackingRegions = cms.InputTag('hltTrackingRegionFromTrimmedVertices')
   process.highPtTripletStepSequence.insert(0, process.hltTrackingRegionFromTrimmedVertices)
+  process.hltHighPtTripletStepTrackCandidates.maxNSeeds = cms.uint32(1000000) # 1M
   return process
 
 def HLTTrackingPath(process):
